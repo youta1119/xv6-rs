@@ -1,3 +1,5 @@
+extern crate lib_x86;
+
 fn main() {
-    println!("Hello, world!");
+    lib_x86::hello();
 }
