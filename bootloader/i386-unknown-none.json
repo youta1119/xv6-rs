@@ -11,7 +11,12 @@
     "linker-flavor": "ld",
     "linker": "i386-jos-elf-ld.bfd",
     "pre-link-args": {
-        "ld": ["--script=linker.ld"]
+        "ld": [
+            "-N",
+            "-e", "start",
+            "-Ttext", "0x7C00",
+            "-m", "elf_i386"
+        ]
     },
     "features": "-mmx,-sse,+soft-float",
     "disable-redzone": true,
