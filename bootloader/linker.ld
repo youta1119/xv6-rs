@@ -10,7 +10,8 @@ SECTIONS {
       *(.data)
       *(.bbs)
     }
-    .sign : AT(IPLBASE + 510) {
+    . = IPLBASE + 510;
+    .sign : {
       SHORT(0xaa55)
     }
 }

@@ -8,10 +8,9 @@
     "arch": "x86",
     "cpu": "pentium4",
     "os": "none",
-    "linker-flavor": "ld",
-    "linker": "i386-jos-elf-ld.bfd",
+    "linker-flavor": "ld.lld",
     "pre-link-args": {
-        "ld": [
+        "ld.lld": [
             "--script=linker.ld"
         ]
     },
