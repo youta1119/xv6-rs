@@ -1,0 +1,15 @@
+version: '2'
+services:  
+  xv6-lab:
+    build:
+      context: .
+      dockerfile: Dockerfile-xv6-lab
+    volumes:
+        - "../lab:/root/work/"
+  xv6-rs:
+    build:
+      context: .
+      dockerfile: Dockerfile-xv6-rs
+    volumes:
+        - "../bootloader:/root/work"
+  

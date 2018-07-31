@@ -20,19 +20,18 @@
 	.byte ((\base >> 16) & 0xff), (0x90 | \type),	(0xC0 | ((\lim >> 28) & 0xf)), ((\base >> 24) & 0xff)
 .endm
 
-.text
-  .globl start
+.code16                     # Assemble for 16-bit mode
+.globl start
 
 start:
-  .code16                     # Assemble for 16-bit mode
   cli                         # Disable interrupts
   cld                         # String operations increment
-
   # Set up the important data segment registers (DS, ES, SS).
   xorw    %ax,%ax             # Segment number zero
   movw    %ax,%ds             # -> Data Segment
   movw    %ax,%es             # -> Extra Segment
   movw    %ax,%ss             # -> Stack Segment
+
 
   # Enable A20:
   #   For backwards compatibility with the earliest PCs, physical
@@ -67,19 +66,20 @@ seta20.2:
   # Switches processor into 32-bit mode.
   ljmp    $PROT_MODE_CSEG, $protcseg
 
-  .code32                     # Assemble for 32-bit mode
+.code32                     # Assemble for 32-bit mode
 protcseg:
   # Set up the protected-mode data segment registers
   movw    $PROT_MODE_DSEG, %ax    # Our data segment selector
   movw    %ax, %ds                # -> DS: Data Segment
   movw    %ax, %es                # -> ES: Extra Segment
+  movw    %ax, %ss                # -> SS: Stack Segment
   movw    %ax, %fs                # -> FS
   movw    %ax, %gs                # -> GS
-  movw    %ax, %ss                # -> SS: Stack Segment
+  
   
   # Set up the stack pointer and call into C.
-  movl    $start, %esp
-  #call bootmain
+  movl $start, %esp
+  call bootmain
 
   # If bootmain returns (it shouldn't), loop.
 spin:
@@ -87,7 +87,7 @@ spin:
   jmp spin
 
 # Bootstrap GDT
-.p2align 2                                # force 4 byte alignment
+#.p2align 2                                # force 4 byte alignment
 gdt:
   SEG_NULL				# null seg
   SEG STA_X|STA_R, 0x0, 0xffffffff	# code seg
@@ -96,6 +96,3 @@ gdt:
 gdtdesc:
   .word   0x17                            # sizeof(gdt) - 1
   .long   gdt                             # address gdt
-
-.org 510
-.word 0xaa55

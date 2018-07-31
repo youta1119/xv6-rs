@@ -22,11 +22,6 @@ RUN apt-get -y update && \
                         libtool-bin \
                         libsdl1.2-dev
 
-#setup rust
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly
-ENV PATH $PATH:/root/.cargo/bin
-RUN cargo install xargo
-RUN rustup component add rust-src
 
 #make gmp
 ARG GMP_VERSION="5.0.5"

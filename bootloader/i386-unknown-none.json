@@ -12,13 +12,16 @@
     "linker": "i386-jos-elf-ld.bfd",
     "pre-link-args": {
         "ld": [
-            "-N",
-            "-e", "start",
-            "-Ttext", "0x7C00",
-            "-m", "elf_i386"
+            "--script=linker.ld"
         ]
     },
     "features": "-mmx,-sse,+soft-float",
+    "dynamic-linking": false,
+    "has-rpath": false,
+    "no-default-libraries": true,
+    "has-elf-tls": true,
+    "eliminate-frame-pointer": false,
+    "no-compiler-rt": true,
     "disable-redzone": true,
     "panic-strategy": "abort",
     "executables": true
