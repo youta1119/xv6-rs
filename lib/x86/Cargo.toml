@@ -1,0 +1,6 @@
+[package]
+name = "x86"
+version = "0.1.0"
+authors = ["youta ogino <dev.youta1119@gmail.com>"]
+
+[dependencies]
