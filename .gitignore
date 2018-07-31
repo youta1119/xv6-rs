@@ -1,4 +1,5 @@
 .idea/
 **/target/**
 *.bin
+*.asm
 .cargo/*
