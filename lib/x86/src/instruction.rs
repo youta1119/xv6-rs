@@ -1,28 +1,29 @@
-/*#[inline]
+
+#[inline(always)]
 pub unsafe fn inb(port: u16) -> u8 {
     let data: u8;
     asm!("inb %dx, %al" : "={ax}" (data) : "{dx}"(port) :: "volatile");
     return data;
 }
 
-#[inline]
-pub unsafe fn insl(port: i32, mut addr: *mut u8, mut cnt: i32) {
-    asm!("cld; rep insl" :
-         "={di}" (addr), "={ecx}" (cnt) :
-         "{edx}" (port), "0" (addr), "1" (cnt) :
-         "memory", "cc" : "volatile");
+#[inline(always)]
+pub unsafe fn insl(port: u16, addr: u32, cnt: u32) {
+    asm!("cld; rep insl %dx, (%edi)"
+         :
+         : "{ecx}"(cnt), "{dx}"(port), "{edi}"(addr)
+         : "ecx", "edi", "memory", "cc"
+         : "volatile");
 }
 
-#[inline]
+#[inline(always)]
 pub unsafe fn outb(port: u16, data: u8) {
     asm!("outb %al, %dx" :: "{dx}"(port), "{al}"(data) :: "volatile");
 }
+/*
+#[inline(always)]
+pub unsafe fn outw(port: u16, data: u16) {
+    asm!("outb $w0, $w1"
+         : "a"(data), "d"(port)
+         :: "volatile");
+}*/
 
-#[inline]
-pub unsafe fn stosb(mut addr: *mut u8, data: i32, mut cnt: i32) {
-    asm!("cld; rep stosb" :
-         "={di}" (addr), "={ecx}" (cnt) :
-         "0" (addr), "1" (cnt), "{eax}" (data) :
-         "memory", "cc": "volatile");
-}
-*/
