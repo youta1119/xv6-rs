@@ -1,0 +1,9 @@
+[package]
+name = "kernel"
+version = "0.1.0"
+authors = ["youta ogino <dev.youta1119@gmail.com>"]
+
+[dependencies]
+
+[lib]
+crate-type = ["staticlib"]

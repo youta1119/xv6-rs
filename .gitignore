@@ -1,5 +1,5 @@
-.idea/
-**/target/**
-*.bin
-*.asm
-.cargo/*
+*.idea/
+*.vscode/
+*target/
+*obj/
+*.iml
