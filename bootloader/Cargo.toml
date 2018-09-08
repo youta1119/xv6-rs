@@ -4,6 +4,6 @@ version = "0.1.0"
 authors = ["youta ogino <dev.youta1119@gmail.com>"]
 
 [dependencies]
-x86 = { path = "../lib/x86"  }
+x86 = { path = "../lib/x86" }
 
 

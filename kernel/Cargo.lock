@@ -1,4 +1,11 @@
 [[package]]
 name = "kernel"
 version = "0.1.0"
+dependencies = [
+ "x86 0.1.0",
+]
+
+[[package]]
+name = "x86"
+version = "0.1.0"
 
