@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 #![feature(lang_items)]
-#![feature(panic_implementation)]
+#![feature(panic_handler)]
 #![feature(global_asm)]
 #![feature(asm)]
 
@@ -15,7 +15,6 @@ use core::panic::PanicInfo;
 global_asm!(include_str!("boot.S"));
 
 const SECTOR_SIZE: u32 = 512;
-
 #[no_mangle]
 pub unsafe extern "C" fn bootmain() {
     let elf_header = 0x10000 as *const ElfHeader;// scratch space
@@ -82,7 +81,7 @@ unsafe fn read_sector(dst: u32, offset: u32) {
     insl(0x1F0, dst, SECTOR_SIZE / 4);
 }
 
-#[panic_implementation]
+#[panic_handler]
 #[no_mangle]
 pub extern "C" fn panic(_info: &PanicInfo) -> ! {
     loop {}

@@ -86,7 +86,7 @@ impl Uart {
             //wait com port empty
             for _ in 0..10000 {
                 if (inb(COM1 + COM_IER) & COM_LSR_DATA) != 0 {
-                   return Some(inb(COM1))
+                    return Some(inb(COM1))
                 }
             }
             None

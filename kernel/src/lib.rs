@@ -2,15 +2,16 @@
 //#![no_main]
 #![feature(lang_items)]
 #![feature(panic_handler)]
-//#![feature(global_asm)]
+#![feature(global_asm)]
 #![feature(asm)]
 extern crate x86;
 
 use core::panic::PanicInfo;
-
 mod io;
 use io::uart::Uart;
-//global_asm!(include_str!("entry.S"));
+//#[macro_use]
+//mod console;
+global_asm!(include_str!("entry.S"));
 static HELLO: &[u8] = b"\nHello World!!!!!";
 
 #[no_mangle]
