@@ -9,6 +9,7 @@
     "cpu": "pentium4",
     "os": "none",
     "linker-flavor": "ld.lld",
+    "linker": "ld.lld-6.0",
     "pre-link-args": {
         "ld.lld": [
             "--script=linker.ld"

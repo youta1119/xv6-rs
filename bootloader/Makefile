@@ -1,10 +1,9 @@
 OBJ_DIR = obj
-LLVM_PREFIX:=$(shell brew --prefix llvm)
-OBJCOPY:=$(LLVM_PREFIX)/bin/llvm-objcopy
-OBJDUMP:=$(LLVM_PREFIX)/bin/llvm-objdump
+OBJCOPY:=llvm-objcopy-6.0
+OBJDUMP:=llvm-objdump-6.0
 
 BUILD_FRAVER := release
-RUSTC_TERGET := i386-unknown-none
+RUSTC_TERGET := xv6-rs-bootloader
 CARGO_FLAG := 
 ifeq ($(BUILD_FRAVER),release)
 	CARGO_FLAG += --release
@@ -14,7 +13,6 @@ $(OBJ_DIR)/bootloader.bin: target/$(RUSTC_TERGET)/$(BUILD_FRAVER)/bootloader
 	mkdir -p $(OBJ_DIR)
 	$(OBJDUMP) -S $< > $(OBJ_DIR)/bootloader.asm
 	$(OBJCOPY) -O binary $< $@
-	hexdump $@
 
 target/$(RUSTC_TERGET)/$(BUILD_FRAVER)/bootloader: src/*.rs src/*.S $(RUSTC_TERGET).json
 	RUST_TARGET_PATH=$(shell pwd) xargo build --target $(RUSTC_TERGET) $(CARGO_FLAG)
