@@ -1,8 +1,8 @@
-V=@
-OBJDIR = obj
+V := @
+OBJ_DIR := ../build
 
-OBJCOPY:=i386-jos-elf-objcopy
-OBJDUMP:=i386-jos-elf-objdump
+OBJCOPY:= i386-jos-elf-objcopy
+OBJDUMP:= i386-jos-elf-objdump
 CC := i386-jos-elf-gcc -pipe
 LD := i386-jos-elf-ld
 NM := i386-jos-elf-nm
@@ -28,7 +28,7 @@ LDFLAGS := -m elf_i386
 LDFLAGS += -T kernel.ld -nostdlib
 # rustc option
 BUILD_FRAVER := debug
-RUSTC_TERGET := i386-unknown-none
+RUSTC_TERGET := xv6-rs-kernel
 CARGO_FLAG := 
 ifeq ($(BUILD_FRAVER),release)
 	CARGO_FLAG += --release
@@ -38,42 +38,37 @@ KERN_SRCFILES := lib/entry.S lib/entrypgdir.c
 # Only build files if they exist.
 KERN_SRCFILES := $(wildcard $(KERN_SRCFILES))
 # Binary program images to embed within the kernel.
-KERN_OBJFILES := $(patsubst %.c, $(OBJDIR)/%.o, $(KERN_SRCFILES))
-KERN_OBJFILES := $(patsubst %.S, $(OBJDIR)/%.o, $(KERN_OBJFILES))
-KERN_OBJFILES := $(patsubst $(OBJDIR)/lib/%, $(OBJDIR)/kern/%, $(KERN_OBJFILES))
+KERN_OBJFILES := $(patsubst %.c, $(OBJ_DIR)/%.o, $(KERN_SRCFILES))
+KERN_OBJFILES := $(patsubst %.S, $(OBJ_DIR)/%.o, $(KERN_OBJFILES))
+
+KERN_OBJFILES := $(patsubst $(OBJ_DIR)/lib/%, $(OBJ_DIR)/kernel/%, $(KERN_OBJFILES))
 KERN_OBJFILES +=  $(RUST_LIB)
+
+.PHONY: all
+
+all: $(OBJ_DIR)/kernel/kernel ;
+
 # How to build kernel object files
-$(OBJDIR)/kern/%.o: lib/%.c
+$(OBJ_DIR)/kernel/%.o: lib/%.c
 	@echo + cc $<
 	@mkdir -p $(@D)
 	$(V)$(CC) -nostdinc $(CFLAGS) -c -o $@ $<
 
-$(OBJDIR)/kern/%.o: lib/%.S 
+$(OBJ_DIR)/kernel/%.o: lib/%.S 
 	@echo + as $<
 	@mkdir -p $(@D)
 	$(V)$(CC) -nostdinc $(CFLAGS) -c -o $@ $<
 
-$(RUST_LIB): src/*.rs i386-unknown-none.json
+$(RUST_LIB): src/*.rs $(RUSTC_TERGET).json
 	RUST_TARGET_PATH=$(shell pwd) xargo build --target $(RUSTC_TERGET) $(CARGO_FLAG)
 
 # How to build the kernel itself
-$(OBJDIR)/kern/kernel:$(KERN_OBJFILES)
+$(OBJ_DIR)/kernel/kernel:$(KERN_OBJFILES)
 	@echo + ld $@
 	$(V)$(LD) -o $@ $(LDFLAGS) $(KERN_OBJFILES) $(GCC_LIB) -b binary
 	$(V)$(OBJDUMP) -S $@ > $@.asm
 	$(V)$(NM) -n $@ > $@.sym
 
-# How to build the kernel disk image
-$(OBJDIR)/kern/kernel.img: $(OBJDIR)/kern/kernel
-	@echo + mk $@
-	$(V)dd if=/dev/zero of=$(OBJDIR)/kern/kernel.img~ count=10000 2>/dev/null
-	$(V)dd if=$(OBJDIR)/boot/boot of=$(OBJDIR)/kern/kernel.img~ conv=notrunc 2>/dev/null
-	$(V)dd if=$(OBJDIR)/kern/kernel of=$(OBJDIR)/kern/kernel.img~ seek=1 conv=notrunc 2>/dev/null
-	$(V)mv $(OBJDIR)/kern/kernel.img~ $(OBJDIR)/kern/kernel.img
-
-qemu: $(OBJDIR)/kern/kernel.img
-	qemu-system-i386 -d int -no-reboot -hda $<
 clean:
-	rm -rf obj/kern
-	cargo clean
-	xargo clean
+	$(V)rm -rf $(OBJ_DIR)/kernel
+	$(V)xargo clean
