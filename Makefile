@@ -6,7 +6,8 @@ OBJ_DIR := build
 all:$(OBJ_DIR)/xv6-rs.img
 	
 qemu: $(OBJ_DIR)/xv6-rs.img
-	qemu-system-i386 -d int -no-reboot -hda $<
+	qemu-system-i386 -no-reboot -nographic -serial mon:stdio build/xv6-rs.img
+	#qemu-system-i386 -d int -no-reboot -hda $<
 
 clean:
 	make -C bootloader V=$(V) clean
