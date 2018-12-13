@@ -1,8 +1,8 @@
 V := @
 OBJ_DIR := ../build
 
-OBJCOPY := llvm-objcopy-6.0
-OBJDUMP := llvm-objdump-6.0
+OBJCOPY := objcopy
+OBJDUMP := objdump
 
 BUILD_FRAVER := release
 RUSTC_TERGET := xv6-rs-bootloader

@@ -20,14 +20,7 @@ RUN apt-get -y update &&\
                         zlib1g-dev\
                         libglib2.0-dev\
                         libtool-bin\
-                        libsdl1.2-dev\
-                        curl\ 
-                        gnupg1\
-                        gnupg2 &&\
-    echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main" >> /etc/apt/sources.list &&\
-    echo "deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main" >> /etc/apt/sources.list &&\
-    curl  https://apt.llvm.org/llvm-snapshot.gpg.key| apt-key add - &&\
-    apt-get -y install clang-6.0 lldb-6.0 lld-6.0
+                        libsdl1.2-dev
 
 #make gmp
 ARG GMP_VERSION="5.0.5"

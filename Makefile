@@ -14,11 +14,14 @@ clean:
 	make -C kernel V=$(V) clean
 	rm -rf $(OBJ_DIR)
 
-# How to build the kernel disk image
-$(OBJ_DIR)/xv6-rs.img:
-	@echo + mk $@
+$(OBJ_DIR)/bootloader/bootloader:
 	$(V)make -C bootloader V=$(V)
+
+$(OBJ_DIR)/kernel/kernel:
 	$(V)make -C kernel V=$(V)
+# How to build the kernel disk image
+$(OBJ_DIR)/xv6-rs.img: $(OBJ_DIR)/bootloader/bootloader $(OBJ_DIR)/kernel/kernel
+	@echo + mk $@
 	$(V)dd if=/dev/zero of=$(OBJ_DIR)/xv6-rs.img~ count=10000 2>/dev/null
 	$(V)dd if=$(OBJ_DIR)/bootloader/bootloader of=$(OBJ_DIR)/xv6-rs.img~ conv=notrunc 2>/dev/null
 	$(V)dd if=$(OBJ_DIR)/kernel/kernel of=$(OBJ_DIR)/xv6-rs.img~ seek=1 conv=notrunc 2>/dev/null
